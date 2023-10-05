@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Movie Ticket Booking API
+  description: API to facilitate online movie ticket bookings.
+paths:
+  /payment/{paymentId}:
+    get:
+      summary: Retrieve payment details by payment ID.
+      parameters:
+        - name: paymentId
+          in: path
+          description: ID of the payment to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment details found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  movieId:
+                    type: string
+                  seatNumber:
+                    type: string
+                  paymentMethod:
+                    type: string
+                  paymentAmount:
+                    type: float
+                  paymentStatus:
+                    type: string
+        '404':
+          description: Payment details not found.
+
+    post:
+      summary: Make a payment for the selected movie ticket.
+      requestBody:
+        description: Payment details for ticket booking.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                movieId:
+                  type: string
+                  description: ID of the selected movie.
+                seatNumber:
+                  type: string
+                  description: Seat number chosen by the customer.
+                paymentMethod:
+                  type: string
+                  description: Payment method selected (e.g. Credit Card, PayPal).
+                cardDetails:
+                  type: object
+                  properties:
+                    cardNumber:
+                      type: string
+                    expiryDate:
+                      type: string
+                    cvv:
+                      type: string
+      responses:
+        '200':
+          description: Payment successful and ticket booked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  confirmationNumber:
+                    type: string
+                    description: Unique confirmation number for the ticket booking.
+        '400':
+          description: Bad request, details provided were not valid.
+        '500':
+          description: Internal server error.
+
+    delete:
+      summary: Cancel a payment based on payment ID.
+      parameters:
+        - name: paymentId
+          in: path
+          description: ID of the payment to be cancelled.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment successfully cancelled.
+        '404':
+          description: Payment details not found.
+        '500':
+          description: Internal server error.
